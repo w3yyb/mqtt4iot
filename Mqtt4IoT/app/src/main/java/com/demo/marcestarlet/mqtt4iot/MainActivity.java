@@ -17,6 +17,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 //import android.view.Menu;
+import android.graphics.Color;
 import android.graphics.BitmapFactory;
 
 import android.view.View.OnClickListener;
@@ -177,6 +178,34 @@ public class MainActivity extends AppCompatActivity implements MqttCallback{
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .build();
         NotificationManager manger= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //自定义声音   声音文件放在ram目录下，没有此目录自己创建一个
+        //notifation.sound=Uri.parse("android.resource://" + getPackageName() + "/" +R.raw.mm);
+
+//使用系统默认声音用下面这条
+        //notifation.defaults=Notification.DEFAULT_SOUND;
+
+        //设置手机震动
+ //第一个，0表示手机静止的时长，第二个，1000表示手机震动的时长
+ //第三个，1000表示手机震动的时长，第四个，1000表示手机震动的时长
+   //此处表示手机先震动1秒，然后静止1秒，然后再震动1秒
+   //long[] vibrates = {0, 1000, 1000, 1000};
+    //    notifation.vibrate = vibrates;
+
+
+        //设置LED指示灯的闪烁 --not work!!!
+  //ledARGB设置颜色
+   //ledOnMS指定LED灯亮起的时间
+   //ledOffMS指定LED灯暗去的时间
+   //flags用于指定通知的行为
+      //  notifation.ledARGB = Color.GREEN;
+      //  notifation.ledOnMS = 1000;
+      //  notifation.ledOffMS = 1000;
+      //  notifation.flags = Notification.FLAG_SHOW_LIGHTS;
+
+
+        //如果不想进行那么多繁杂的这只，可以直接使用通知的默认效果
+        //默认设置了声音，震动和灯光
+        notifation.defaults = Notification.DEFAULT_ALL;
         manger.notify(0, notifation);
     }
 
