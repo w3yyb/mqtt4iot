@@ -8,6 +8,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.KeyEvent;
+
+//import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+//import android.view.Menu;
+import android.graphics.BitmapFactory;
+
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -19,9 +33,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MainActivity extends AppCompatActivity implements MqttCallback{
+    Button button;
+
 
     // connection default values
-    private static final String BROKER_URI = "tcp://iot.eclipse.org:1883";
+    private static final String BROKER_URI = "tcp://pushuser.itv.ott.cibntv.net:1883";
     private static final String TOPIC = "mqtt4iotdemo";
     private static final int QOS = 2;
 
@@ -38,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements MqttCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //button = (Button) findViewById(R.id.notify);
 
         // get text elements to re-use them
         textMessage = (EditText) findViewById(R.id.message);
@@ -54,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements MqttCallback{
 
         try{
             MqttConnectOptions options = new MqttConnectOptions();
-            options.setCleanSession(true); // clean session in order to don't get duplicate messages each time we connect
+            options.setCleanSession(false); // clean session in order to don't get duplicate messages each time we connect
+           // Toast.makeText(this,"cleansession"+ options.isCleanSession() , Toast.LENGTH_SHORT).show();
 
             client.connect(options, new IMqttActionListener() {
 
@@ -150,10 +168,30 @@ public class MainActivity extends AppCompatActivity implements MqttCallback{
         text += message.toString();
         textConversation.setTag(text);
         textConversation.setText(Html.fromHtml(text));
+
+        //获得通知管理器
+        Notification notifation= new Notification.Builder(MainActivity.this)
+                .setContentTitle("新消息")
+                .setContentText(Html.fromHtml(message.toString()))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .build();
+        NotificationManager manger= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manger.notify(0, notifation);
     }
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
         //Toast.makeText(this, "Delivery complete!", Toast.LENGTH_SHORT).show();
     }
-}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    }
