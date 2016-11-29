@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements MqttCallback{
 
 
     // connection default values
-    private static final String BROKER_URI = "tcp://pushuser.itv.ott.cibntv.net:1883";
+    private static final String BROKER_URI = "tcp://www.p2hp.com:1883";
     private static final String TOPIC = "mqtt4iotdemo";
     private static final int QOS = 2;
 
